@@ -1,0 +1,288 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Analysis Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styling */
+        /* Fertilizer Recommendation Box */
+/* Fertilizer Text Box */
+.fertilizer-value-box {
+    background-color: #007bff; /* Blue background for the box */
+    color: white; /* Text color inside the box */
+    padding: 10px 20px; /* Increase padding to make the box bigger */
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block; /* Keeps it inline with the text */
+    margin-top: 5px;
+}
+
+
+
+
+        /* Background Image for the Whole Page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('{% static "images/bg.jpeg" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Transparent white background for container */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .card {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card strong {
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+
+        .graph {
+            margin: 30px auto;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        /* Soil Score Indicator */
+        .soil-score-indicator {
+            margin: 20px 0;
+            padding: 10px;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .soil-score-indicator.green {
+            background-color: #28a745;
+        }
+
+        .soil-score-indicator.yellow {
+            background-color: #ffc107;
+        }
+
+        .soil-score-indicator.red {
+            background-color: #dc3545;
+        }
+
+        /* Crop Image */
+        .crop-image {
+            max-width: 150px; /* Increased size */
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .content {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Soil Analysis Results</h1>
+
+    <div class="content">
+        <!-- First Column: Soil Score and NPK Chart -->
+        <div class="card">
+            <strong>Soil Score:</strong>
+            <div class="soil-score-indicator {{ soil_suitability_class }}">{{ soil_score }}</div>
+
+            <!-- NPK Chart Inside Soil Score Section -->
+            <div class="graph">
+                <canvas id="nutrientChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Second Column: Crop Type Recommendation, Crop Image, and Fertilizer -->
+        <div class="card">
+            <!-- Crop Recommendation -->
+            <strong>Recommended Crop:</strong>
+            <p>{{ recommended_crop }}</p>
+
+            {% if recommended_crop == 'rice' %}
+                <img src="{% static 'images/rice.png' %}" alt="Rice Image" class="crop-image">
+            {% elif recommended_crop == 'maize' %}
+                <img src="{% static 'images/maize.png' %}" alt="Maize Image" class="crop-image">
+            {% elif recommended_crop == 'chickpea' %}
+                <img src="{% static 'images/chickpea.png' %}" alt="Chickpea Image" class="crop-image">
+            {% elif recommended_crop == 'kidneybeans' %}
+                <img src="{% static 'images/kidneybeans.png' %}" alt="Kidney Beans Image" class="crop-image">
+            {% elif recommended_crop == 'pigeonpeas' %}
+                <img src="{% static 'images/pigeonpeas.jpeg' %}" alt="Pigeonpeas Image" class="crop-image">
+            {% elif recommended_crop == 'mothbeans' %}
+                <img src="{% static 'images/mothbeans.png' %}" alt="Moth Beans Image" class="crop-image">
+            {% elif recommended_crop == 'mungbean' %}
+                <img src="{% static 'images/mungbean.png' %}" alt="Mungbean Image" class="crop-image">
+            {% elif recommended_crop == 'blackgram' %}
+                <img src="{% static 'images/blackgram.png' %}" alt="Blackgram Image" class="crop-image">
+            {% elif recommended_crop == 'lentil' %}
+                <img src="{% static 'images/lentil.png' %}" alt="Lentil Image" class="crop-image">
+            {% elif recommended_crop == 'watermelon' %}
+                <img src="{% static 'images/watermelon.png' %}" alt="Watermelon Image" class="crop-image">
+            {% elif recommended_crop == 'muskmelon' %}
+                <img src="{% static 'images/muskmelon.png' %}" alt="Muskmelon Image" class="crop-image">
+            {% elif recommended_crop == 'cotton' %}
+                <img src="{% static 'images/cotton.png' %}" alt="Cotton Image" class="crop-image">
+            {% elif recommended_crop == 'Lotus' %}
+                <img src="{% static 'images/Lotus.png' %}" alt="Lotus Image" class="crop-image">
+            {% elif recommended_crop == 'Chrysanthemum' %}
+                <img src="{% static 'images/Chrysanthemum.png' %}" alt="Chrysanthemum Image" class="crop-image">
+            {% elif recommended_crop == 'Mango' %}
+                <img src="{% static 'images/Mango.jpg' %}" alt="Mango Image" class="crop-image">
+            {% elif recommended_crop == 'Banana' %}
+                <img src="{% static 'images/Banana.jpg' %}" alt="Banana Image" class="crop-image">
+            {% elif recommended_crop == 'Hibiscus' %}
+                <img src="{% static 'images/Hibiscus.jpeg' %}" alt="Hibiscus Image" class="crop-image">
+            {% elif recommended_crop == 'Orange' %}
+                <img src="{% static 'images/Orange.jpg' %}" alt="Orange Image" class="crop-image">
+            {% elif recommended_crop == 'Tulip' %}
+                <img src="{% static 'images/Tulip.jpg' %}" alt="Tulip Image" class="crop-image">
+            {% elif recommended_crop == 'Guava' %}
+                <img src="{% static 'images/Guava.jpg' %}" alt="Guava Image" class="crop-image">
+            {% elif recommended_crop == 'Rose' %}
+                <img src="{% static 'images/Rose.jpg' %}" alt="Rose Image" class="crop-image">
+            {% elif recommended_crop == 'Dahlia' %}
+                <img src="{% static 'images/Dahlia.jpg' %}" alt="Dahlia Image" class="crop-image">
+            {% elif recommended_crop == 'Jasmine' %}
+                <img src="{% static 'images/Jasmine.jpg' %}" alt="Jasmine Image" class="crop-image">
+            {% elif recommended_crop == 'Pomegranate' %}
+                <img src="{% static 'images/Pomegranate.jpg' %}" alt="Pomegranate Image" class="crop-image">
+            {% elif recommended_crop == 'Marigold' %}
+                <img src="{% static 'images/Marigold.jpg' %}" alt="Marigold Image" class="crop-image">
+            {% elif recommended_crop == 'Papaya' %}
+                <img src="{% static 'images/Papaya.jpg' %}" alt="Papaya Image" class="crop-image">
+            {% elif recommended_crop == 'Pineapple' %}
+                <img src="{% static 'images/Pineapple.jpg' %}" alt="Pineapple Image" class="crop-image">
+            {% elif recommended_crop == 'Apple' %}
+                <img src="{% static 'images/Apple.jpg' %}" alt="Apple Image" class="crop-image">
+            {% elif recommended_crop == 'Sunflower' %}
+                <img src="{% static 'images/Sunflower.jpg' %}" alt="Sunflower Image" class="crop-image">
+            {% endif %}
+
+            <br><br>
+            <!-- Recommended Fertilizer -->
+            <!-- Recommended Fertilizer -->
+            <!-- Recommended Fertilizer -->
+<strong>Recommended Fertilizer:</strong>
+<p><span class="fertilizer-value-box">{{ recommended_fertilizer }}</span></p>
+
+
+        </div>
+    </div>
+
+    <!-- Doughnut Chart for Soil Suitability Score -->
+    <div class="graph" style="max-width: 400px;">
+        <canvas id="soilScoreChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Convert Django variables to numbers
+    const soilScore = Number("{{ soil_score|safe }}");
+
+    const nutrientLevels = [
+        Number("{{ npk.Nitrogen|safe }}"),
+        Number("{{ npk.Phosphorus|safe }}"),
+        Number("{{ npk.Potassium|safe }}")
+    ];
+
+    // NPK Chart (Bar)
+    const ctxNPK = document.getElementById('nutrientChart').getContext('2d');
+    new Chart(ctxNPK, {
+        type: 'bar',
+        data: {
+            labels: ['Nitrogen', 'Phosphorus', 'Potassium'],
+            datasets: [{
+                label: 'NPK Levels',
+                data: nutrientLevels,
+                backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
+                borderColor: ['#28a745', '#ffc107', '#dc3545'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Soil Suitability Score (Doughnut)
+    const ctxSoilScore = document.getElementById('soilScoreChart').getContext('2d');
+    new Chart(ctxSoilScore, {
+        type: 'doughnut',
+        data: {
+            labels: ['Soil Suitability'],
+            datasets: [{
+                label: 'Soil Suitability',
+                data: [soilScore, 100 - soilScore],
+                backgroundColor: ['#28a745', '#e0e0e0'],
+                borderColor: ['#28a745', '#e0e0e0'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.raw + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

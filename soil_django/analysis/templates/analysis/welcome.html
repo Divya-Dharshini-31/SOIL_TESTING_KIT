@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Logo Section (Always Visible & Centered) -->
+            <img src="{% static 'images/logo.jpeg' %}" alt="My Image" class="logo">
+            <h1>Welcome to the Soil Analysis Tool!</h1>
+            <p>Explore the possibilities of soil analysis and crop recommendation for better farming outcomes.</p>
+        </div>
+        <!-- Start Soil Analysis Button -->
+        <a href="{% url 'soil_analysis_view' %}" class="button">Start Soil Analysis</a>
+        <div class="footer">
+            <p>Need help? <a href="/contact">Contact us</a></p>
+        </div>
+    </div>
+</body>
+</html>
