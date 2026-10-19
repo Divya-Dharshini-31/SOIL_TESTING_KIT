@@ -1,12 +1,24 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from analysis.logic.soil_analysis import predict_soil_type, predict_npk, calculate_soil_score, soil_suitability_message, predict_salinity
+#from analysis.logic.soil_analysis import predict_soil_type, predict_npk, calculate_soil_score, soil_suitability_message, predict_salinity
 from analysis.logic.crop_rec import get_crop_recommendation
 from analysis.logic.fertilizer_recommendation import recommend_fertilizer
-from analysis.logic.main import get_user_input  # Import the input function from main.py
+#from analysis.logic.main import get_user_input  # Import the input function from main.py
 
 @csrf_exempt  # Disable CSRF protection for this view to allow Arduino data to be sent
 def soil_analysis_view(request):
+
+    context = {
+        "soil_score": 82,
+        "nitrogen": 65,
+        "phosphorus": 50,
+        "potassium": 70,
+        "fertilizer": "Urea, Compost",
+        "crop": "Rice, Maize",
+        "message": "Soil is moderately fertile and suitable for crops"
+    }
+    return render(request, "analysis/soil_analysis_output.html", context)
+    '''
     # Get user input from main.py (Arduino sensor data or default values)
     user_input = get_user_input()  # This will fetch data from Arduino or use default if there's an issue
 
@@ -45,6 +57,7 @@ def soil_analysis_view(request):
 
     # Render the template with the context data
     return render(request, 'analysis/soil_analysis_output.html', context)
+    '''
 
 def welcome(request):
     return render(request, 'analysis/welcome.html')

@@ -1,7 +1,10 @@
 import pandas as pd
 
-# Load the dataset
-file_path = r"C:\Users\msvic\OneDrive\Desktop\SOIL_TESTING_KIT\soil_django\SoilAnalysisModel\data\new_soil_data.csv" # Replace with your file path
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+file_path = os.path.join(BASE_DIR, 'analysis', 'data', 'soil_data.csv')
+
 data = pd.read_csv(file_path)
 
 # 1. Count missing (null) values in the dataset

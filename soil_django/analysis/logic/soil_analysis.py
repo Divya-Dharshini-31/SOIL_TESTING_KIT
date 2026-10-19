@@ -5,8 +5,11 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 from sklearn.metrics import accuracy_score
 
-# Load dataset and prepare
-file_path = r"C:\Users\msvic\OneDrive\Desktop\SOIL_TESTING_KIT\soil_django\analysis\data\soil_data.csv"  # Update this path
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+file_path = os.path.join(BASE_DIR, 'analysis', 'data', 'soil_data.csv')
+
 data = pd.read_csv(file_path)
 
 label_encoder_soil = LabelEncoder()
